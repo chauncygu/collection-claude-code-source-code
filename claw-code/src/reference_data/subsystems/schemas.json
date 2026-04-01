@@ -1,8 +1,0 @@
-{
-  "archive_name": "schemas",
-  "package_name": "schemas",
-  "module_count": 1,
-  "sample_files": [
-    "schemas/hooks.ts"
-  ]
-}

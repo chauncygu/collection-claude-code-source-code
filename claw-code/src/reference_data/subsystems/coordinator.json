@@ -1,8 +1,0 @@
-{
-  "archive_name": "coordinator",
-  "package_name": "coordinator",
-  "module_count": 1,
-  "sample_files": [
-    "coordinator/coordinatorMode.ts"
-  ]
-}

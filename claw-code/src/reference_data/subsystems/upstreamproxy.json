@@ -1,9 +1,0 @@
-{
-  "archive_name": "upstreamproxy",
-  "package_name": "upstreamproxy",
-  "module_count": 2,
-  "sample_files": [
-    "upstreamproxy/relay.ts",
-    "upstreamproxy/upstreamproxy.ts"
-  ]
-}

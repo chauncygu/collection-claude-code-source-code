@@ -1,8 +1,0 @@
-{
-  "archive_name": "moreright",
-  "package_name": "moreright",
-  "module_count": 1,
-  "sample_files": [
-    "moreright/useMoreRight.tsx"
-  ]
-}

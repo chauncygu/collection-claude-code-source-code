@@ -1,9 +1,0 @@
-{
-  "archive_name": "plugins",
-  "package_name": "plugins",
-  "module_count": 2,
-  "sample_files": [
-    "plugins/builtinPlugins.ts",
-    "plugins/bundled/index.ts"
-  ]
-}

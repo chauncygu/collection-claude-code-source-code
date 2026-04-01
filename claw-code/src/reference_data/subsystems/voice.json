@@ -1,8 +1,0 @@
-{
-  "archive_name": "voice",
-  "package_name": "voice",
-  "module_count": 1,
-  "sample_files": [
-    "voice/voiceModeEnabled.ts"
-  ]
-}

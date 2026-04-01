@@ -1,8 +1,0 @@
-{
-  "archive_name": "bootstrap",
-  "package_name": "bootstrap",
-  "module_count": 1,
-  "sample_files": [
-    "bootstrap/state.ts"
-  ]
-}
