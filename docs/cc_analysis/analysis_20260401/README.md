@@ -1,11 +1,10 @@
 ### analysis\_20260401 
 
-Note, here, the original analysis material from the [link](https://github.com/win4r/cc-notebook/tree/main)
 
 | Document | Content |
 | -------- | ------- |
-| [Claude Code 上下文管理算法学习笔记](docs/cc_analysis/analysis_20260401/Claude_Code_Context_Management_Notes.md) | Step-by-step walkthrough of the context management algorithm: `autoCompact`, micro/reactive/trimmed compression strategies, and `toolResultStorage` |
-| [Claude Code 多 Agent 架构深度分析](docs/cc_analysis/analysis_20260401/claude-code-multi-agent-architecture.md) | Deep analysis of the multi-agent architecture across 37+ files: `src/utils/swarm/`, `AgentTool/`, `coordinator/` |
+| [Claude Code 上下文管理算法学习笔记](https://github.com/chauncygu/collection-claude-code-source-code/blob/main/docs/cc_analysis/analysis_20260401/Claude_Code_Context_Management_Notes.md) | Step-by-step walkthrough of the context management algorithm: `autoCompact`, micro/reactive/trimmed compression strategies, and `toolResultStorage` |
+| [Claude Code 多 Agent 架构深度分析](claude-code-multi-agent-architecture.md) | Deep analysis of the multi-agent architecture across 37+ files: `src/utils/swarm/`, `AgentTool/`, `coordinator/` |
 | [Claude Code 值得借鉴的算法与设计模式](docs/cc_analysis/analysis_20260401/Claude_Code_Notable_Algorithms.md) | Notable algorithms and design patterns worth borrowing from the source (complements the context management notes) |
 | [Claude Code 自动回滚机制解析与版本切换指南](docs/cc_analysis/analysis_20260401/Claude-Code-Version-Rollback.md) | How the automatic rollback mechanism works and a practical version-switching guide |
 | [Claude Code 上下文压缩算法深度分析](docs/cc_analysis/analysis_20260401/Claude_Code上下文压缩算法深度分析.md) | Detailed reverse-engineering of the 11-file `src/services/compact/` compression pipeline |
@@ -18,3 +17,7 @@ Note, here, the original analysis material from the [link](https://github.com/wi
 | [Claude Code Deep Analysis Report (PDF)](docs/cc_analysis/analysis_20260401/Claude_Code_Deep_Analysis_Report.pdf) | Comprehensive analysis report in PDF format (English) |
 
 ---
+
+Note, here, the original analysis material from the [link](https://github.com/win4r/cc-notebook/tree/main)
+
+
