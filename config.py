@@ -11,8 +11,8 @@ SESSIONS_DIR = CONFIG_DIR  / "sessions"
 MR_SESSION_DIR = SESSIONS_DIR / "mr_sessions"
 
 DEFAULTS = {
-    "model":            "claude-opus-4-6",
-    "max_tokens":       8192,
+    "model":            "ollama/gemma4:e4b",
+    "max_tokens":       40000,
     "permission_mode":  "auto",   # auto | accept-all | manual
     "verbose":          False,
     "thinking":         False,

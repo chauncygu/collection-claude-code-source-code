@@ -54,6 +54,8 @@ from __future__ import annotations
 
 import os
 import sys
+if sys.platform == "win32":
+    os.system("")  # Enable ANSI escape codes on Windows CMD
 import json
 try:
     import readline
@@ -249,7 +251,12 @@ def cmd_model(args: str, _state, config) -> bool:
         info("  e.g. /model kimi:moonshot-v1-32k")
     else:
         # Accept both "ollama/model" and "ollama:model" syntax
-        m = args.strip().replace(":", "/", 1)
+        # Only treat ':' as provider separator if left side is a known provider
+        m = args.strip()
+        if "/" not in m and ":" in m:
+            left, right = m.split(":", 1)
+            if left in PROVIDERS:
+                m = f"{left}/{right}"
         config["model"] = m
         pname = detect_provider(m)
         ok(f"Model set to {m}  (provider: {pname})")
