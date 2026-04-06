@@ -9,6 +9,7 @@ Supported providers:
   qwen       — Alibaba DashScope (qwen-max, qwen-plus, ...)
   zhipu      — Zhipu GLM (glm-4, glm-4-plus, ...)
   deepseek   — DeepSeek (deepseek-chat, deepseek-reasoner, ...)
+  minimax    — MiniMax (MiniMax-M2.7, MiniMax-M2.7-highspeed)
   ollama     — Local Ollama (llama3.3, qwen2.5-coder, ...)
   lmstudio   — Local LM Studio (any loaded model)
   custom     — Any OpenAI-compatible endpoint
@@ -16,6 +17,7 @@ Supported providers:
 Model string formats:
   "claude-opus-4-6"          auto-detected → anthropic
   "gpt-4o"                   auto-detected → openai
+  "MiniMax-M2.7"             auto-detected → minimax
   "ollama/qwen2.5-coder"     explicit provider prefix
   "custom/my-model"          uses CUSTOM_BASE_URL from config
 """
@@ -97,6 +99,15 @@ PROVIDERS: dict[str, dict] = {
             "deepseek-chat", "deepseek-coder", "deepseek-reasoner",
         ],
     },
+    "minimax": {
+        "type":       "openai",
+        "api_key_env": "MINIMAX_API_KEY",
+        "base_url":   "https://api.minimax.io/v1",
+        "context_limit": 1000000,
+        "models": [
+            "MiniMax-M2.7", "MiniMax-M2.7-highspeed",
+        ],
+    },
     "ollama": {
         "type":       "openai",
         "api_key_env": None,
@@ -144,6 +155,8 @@ COSTS = {
     "deepseek-chat":            (0.27,  1.1),
     "deepseek-reasoner":        (0.55,  2.19),
     "glm-4-plus":               (0.7,   0.7),
+    "MiniMax-M2.7":             (0.8,   3.2),
+    "MiniMax-M2.7-highspeed":   (0.4,   1.6),
 }
 
 # Auto-detection: prefix → provider name
@@ -159,6 +172,7 @@ _PREFIXES = [
     ("qwq-",          "qwen"),
     ("glm-",          "zhipu"),
     ("deepseek-",     "deepseek"),
+    ("minimax-",      "minimax"),
     ("llama",         "ollama"),
     ("mistral",       "ollama"),
     ("phi",           "ollama"),
