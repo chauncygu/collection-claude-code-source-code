@@ -4,7 +4,7 @@
 
 > **License and Disclaimer** This repository is for academic research and educational purposes only. All subprojects are built from publicly accessible information. Users are responsible for complying with applicable laws, regulations, and service terms.
 
-> Source archive of Claude Code and different versions of the clean-room Python rewrite research repository
+Source archive of Claude Code and different versions of the clean-room Python rewrite research repository
 
 ## 🔥🔥🔥 News (Pacific Time)
 - 12:20 PM · Apr 02, 2026: [Nano Claude Code v3.0: Multi-agent packages, memory package, skill package with built-in skills, argument substitution, fork/inline execution, AI memory search, git worktree isolation, agent type definitions (~5000 Lines)](https://github.com/SafeRL-Lab/clawspring)
