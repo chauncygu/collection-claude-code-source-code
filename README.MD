@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/chauncygu-collection-claude-code-source-code-badge.png)](https://mseep.ai/app/chauncygu-collection-claude-code-source-code)
+
 
 # A collection of the newest Claude Code open source
 
