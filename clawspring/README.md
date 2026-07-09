@@ -375,6 +375,7 @@ Claude Code is a powerful, production-grade AI coding assistant — but its sour
 | **Zhipu (GLM)** | `glm-4-flash` | 128k | Free tier available | `ZHIPU_API_KEY` |
 | **DeepSeek** | `deepseek-chat` | 64k | Strong coding | `DEEPSEEK_API_KEY` |
 | **DeepSeek** | `deepseek-reasoner` | 64k | Chain-of-thought reasoning | `DEEPSEEK_API_KEY` |
+| **MiniMax** | `MiniMax-M3` | 1M | Long-context coding and agent tasks | `MINIMAX_API_KEY` |
 
 ### Open-Source (Local via Ollama)
 
@@ -540,6 +541,16 @@ export DEEPSEEK_API_KEY=sk-...
 
 clawspring --model deepseek/deepseek-chat
 clawspring --model deepseek/deepseek-reasoner
+```
+
+### MiniMax
+
+Get your API key at [platform.minimax.io](https://platform.minimax.io/docs).
+
+```bash
+export MINIMAX_API_KEY=...
+
+clawspring --model MiniMax-M3
 ```
 
 ---
@@ -729,6 +740,7 @@ clawspring --model qwen:qwen-max
 | `qwen`, `qwq-` | qwen |
 | `glm-` | zhipu |
 | `deepseek-` | deepseek |
+| `minimax-` | minimax |
 | `llama`, `mistral`, `phi`, `gemma`, `mixtral`, `codellama` | ollama |
 
 ---
@@ -869,6 +881,7 @@ export MOONSHOT_API_KEY=sk-...       # Kimi
 export DASHSCOPE_API_KEY=sk-...      # Qwen
 export ZHIPU_API_KEY=...             # Zhipu GLM
 export DEEPSEEK_API_KEY=sk-...       # DeepSeek
+export MINIMAX_API_KEY=...           # MiniMax
 ```
 
 ### Method 2: Set Inside the REPL (persisted)
@@ -881,6 +894,7 @@ export DEEPSEEK_API_KEY=sk-...       # DeepSeek
 /config qwen_api_key=sk-...
 /config zhipu_api_key=...
 /config deepseek_api_key=sk-...
+/config minimax_api_key=...
 ```
 
 Keys are saved to `~/.clawspring/config.json` and loaded automatically on next launch.
