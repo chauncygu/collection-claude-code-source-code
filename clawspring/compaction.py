@@ -43,9 +43,7 @@ def get_context_limit(model: str) -> int:
     Returns:
         context limit in tokens
     """
-    provider_name = providers.detect_provider(model)
-    prov = providers.PROVIDERS.get(provider_name, {})
-    return prov.get("context_limit", 128000)
+    return providers.get_context_limit(model)
 
 
 # ── Layer 1: Snip old tool results ────────────────────────────────────────

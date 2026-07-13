@@ -375,6 +375,8 @@ Claude Code is a powerful, production-grade AI coding assistant — but its sour
 | **Zhipu (GLM)** | `glm-4-flash` | 128k | Free tier available | `ZHIPU_API_KEY` |
 | **DeepSeek** | `deepseek-chat` | 64k | Strong coding | `DEEPSEEK_API_KEY` |
 | **DeepSeek** | `deepseek-reasoner` | 64k | Chain-of-thought reasoning | `DEEPSEEK_API_KEY` |
+| **MiniMax** | `MiniMax-M3` | 1M | Multimodal coding and long-context tasks | `MINIMAX_API_KEY` |
+| **MiniMax** | `MiniMax-M2.7` | 204.8k | Coding and agent workflows | `MINIMAX_API_KEY` |
 
 ### Open-Source (Local via Ollama)
 
@@ -540,6 +542,39 @@ export DEEPSEEK_API_KEY=sk-...
 
 clawspring --model deepseek/deepseek-chat
 clawspring --model deepseek/deepseek-reasoner
+```
+
+### MiniMax
+
+Get your API key at [platform.minimax.io](https://platform.minimax.io/docs). The built-in provider uses the global OpenAI-compatible endpoint by default.
+
+```bash
+export MINIMAX_API_KEY=...
+
+clawspring --model MiniMax-M3
+clawspring --model MiniMax-M2.7
+```
+
+For the CN OpenAI-compatible endpoint, use the existing custom adapter:
+
+```bash
+export CUSTOM_API_KEY="$MINIMAX_API_KEY"
+export CUSTOM_BASE_URL=https://api.minimaxi.com/v1
+
+clawspring --model custom/MiniMax-M3
+```
+
+For the Anthropic-compatible protocol, use the existing Anthropic adapter with the Base URL ending in `/anthropic`:
+
+```bash
+# Global
+export ANTHROPIC_API_KEY="$MINIMAX_API_KEY"
+export ANTHROPIC_BASE_URL=https://api.minimax.io/anthropic
+clawspring --model anthropic/MiniMax-M3
+
+# CN
+export ANTHROPIC_BASE_URL=https://api.minimaxi.com/anthropic
+clawspring --model anthropic/MiniMax-M3
 ```
 
 ---
@@ -729,6 +764,7 @@ clawspring --model qwen:qwen-max
 | `qwen`, `qwq-` | qwen |
 | `glm-` | zhipu |
 | `deepseek-` | deepseek |
+| `minimax-` | minimax |
 | `llama`, `mistral`, `phi`, `gemma`, `mixtral`, `codellama` | ollama |
 
 ---
@@ -869,6 +905,7 @@ export MOONSHOT_API_KEY=sk-...       # Kimi
 export DASHSCOPE_API_KEY=sk-...      # Qwen
 export ZHIPU_API_KEY=...             # Zhipu GLM
 export DEEPSEEK_API_KEY=sk-...       # DeepSeek
+export MINIMAX_API_KEY=...           # MiniMax
 ```
 
 ### Method 2: Set Inside the REPL (persisted)
@@ -881,6 +918,7 @@ export DEEPSEEK_API_KEY=sk-...       # DeepSeek
 /config qwen_api_key=sk-...
 /config zhipu_api_key=...
 /config deepseek_api_key=sk-...
+/config minimax_api_key=...
 ```
 
 Keys are saved to `~/.clawspring/config.json` and loaded automatically on next launch.
