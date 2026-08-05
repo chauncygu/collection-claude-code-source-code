@@ -21,6 +21,7 @@ def test_minimax_registry_and_detection():
     provider = PROVIDERS["minimax"]
     assert provider["type"] == "openai"
     assert provider["base_url"] == "https://api.minimax.io/v1"
+    assert provider["anthropic_base_url"] == "https://api.minimax.io/anthropic"
     assert provider["models"] == ["MiniMax-M3", "MiniMax-M2.7"]
     assert detect_provider("MiniMax-M3") == "minimax"
     assert detect_provider("MiniMax-M2.7") == "minimax"
@@ -41,25 +42,37 @@ def test_minimax_model_capabilities():
     assert MODEL_METADATA["MiniMax-M2.7"]["thinking"] == ["always_on"]
 
 
-def test_minimax_m3_standard_pricing_tiers():
-    lower = calc_cost("MiniMax-M3", 512000, 1000000)
-    upper = calc_cost("MiniMax-M3", 512001, 1000000)
-    assert lower == pytest.approx(0.512 * 0.3 + 1.2)
-    assert upper == pytest.approx(0.512001 * 0.6 + 2.4)
-
-
-def test_minimax_m3_priority_pricing_tiers():
-    lower = calc_cost("MiniMax-M3", 512000, 1000000, service_tier="priority")
-    upper = calc_cost("MiniMax-M3", 512001, 1000000, service_tier="priority")
-    assert lower == pytest.approx(0.512 * 0.45 + 1.8)
-    assert upper == pytest.approx(0.512001 * 0.9 + 3.6)
+def test_minimax_regional_endpoints():
+    assert PROVIDERS["minimax"]["regional_endpoints"] == [
+        {
+            "region": "global_en",
+            "openai_base_url": "https://api.minimax.io/v1",
+            "anthropic_base_url": "https://api.minimax.io/anthropic",
+            "docs_root": "https://platform.minimax.io/docs",
+        },
+        {
+            "region": "cn_zh",
+            "openai_base_url": "https://api.minimaxi.com/v1",
+            "anthropic_base_url": "https://api.minimaxi.com/anthropic",
+            "docs_root": "https://platform.minimaxi.com/docs",
+        },
+    ]
 
 
 def test_minimax_cache_pricing_metadata():
-    m3_tiers = MODEL_METADATA["MiniMax-M3"]["pricing_tiers"]
-    m27_standard = MODEL_METADATA["MiniMax-M2.7"]["pricing_tiers"][0]
-    assert [tier["cache_read"] for tier in m3_tiers] == [0.06, 0.12, 0.09, 0.18]
-    assert all(tier["cache_write"] is None for tier in m3_tiers)
-    assert m27_standard["cache_read"] == 0.06
-    assert m27_standard["cache_write"] == 0.375
+    m3_pricing = MODEL_METADATA["MiniMax-M3"]["pricing"]
+    m27_pricing = MODEL_METADATA["MiniMax-M2.7"]["pricing"]
+    assert m3_pricing == {
+        "input": 0.6,
+        "output": 2.4,
+        "cache_read": 0.12,
+        "cache_write": None,
+    }
+    assert m27_pricing == {
+        "input": 0.3,
+        "output": 1.2,
+        "cache_read": 0.06,
+        "cache_write": 0.375,
+    }
+    assert calc_cost("MiniMax-M3", 1000000, 1000000) == pytest.approx(3.0)
     assert calc_cost("MiniMax-M2.7", 1000000, 1000000) == pytest.approx(1.5)

@@ -104,9 +104,24 @@ PROVIDERS: dict[str, dict] = {
         "type":       "openai",
         "api_key_env": "MINIMAX_API_KEY",
         "base_url":   "https://api.minimax.io/v1",
+        "anthropic_base_url": "https://api.minimax.io/anthropic",
         "context_limit": 1000000,
         "models": [
             "MiniMax-M3", "MiniMax-M2.7",
+        ],
+        "regional_endpoints": [
+            {
+                "region": "global_en",
+                "openai_base_url": "https://api.minimax.io/v1",
+                "anthropic_base_url": "https://api.minimax.io/anthropic",
+                "docs_root": "https://platform.minimax.io/docs",
+            },
+            {
+                "region": "cn_zh",
+                "openai_base_url": "https://api.minimaxi.com/v1",
+                "anthropic_base_url": "https://api.minimaxi.com/anthropic",
+                "docs_root": "https://platform.minimaxi.com/docs",
+            },
         ],
     },
     "ollama": {
@@ -144,54 +159,23 @@ MODEL_METADATA = {
         "context_limit": 1000000,
         "input_modalities": ["text", "image", "video"],
         "thinking": ["adaptive", "disabled"],
-        "pricing_tiers": [
-            {
-                "service_tier": "standard",
-                "input_tokens_lte": 512000,
-                "input": 0.3,
-                "output": 1.2,
-                "cache_read": 0.06,
-                "cache_write": None,
-            },
-            {
-                "service_tier": "standard",
-                "input_tokens_gt": 512000,
-                "input": 0.6,
-                "output": 2.4,
-                "cache_read": 0.12,
-                "cache_write": None,
-            },
-            {
-                "service_tier": "priority",
-                "input_tokens_lte": 512000,
-                "input": 0.45,
-                "output": 1.8,
-                "cache_read": 0.09,
-                "cache_write": None,
-            },
-            {
-                "service_tier": "priority",
-                "input_tokens_gt": 512000,
-                "input": 0.9,
-                "output": 3.6,
-                "cache_read": 0.18,
-                "cache_write": None,
-            },
-        ],
+        "pricing": {
+            "input": 0.6,
+            "output": 2.4,
+            "cache_read": 0.12,
+            "cache_write": None,
+        },
     },
     "MiniMax-M2.7": {
         "context_limit": 204800,
         "input_modalities": ["text"],
         "thinking": ["always_on"],
-        "pricing_tiers": [
-            {
-                "service_tier": "standard",
-                "input": 0.3,
-                "output": 1.2,
-                "cache_read": 0.06,
-                "cache_write": 0.375,
-            },
-        ],
+        "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.06,
+            "cache_write": 0.375,
+        },
     },
 }
 
@@ -284,26 +268,8 @@ def get_api_key(provider_name: str, config: dict) -> str:
     return prov.get("api_key", "")
 
 
-def _get_pricing_tier(model: str, in_tok: int, service_tier: str) -> dict:
-    tiers = get_model_metadata(model).get("pricing_tiers", [])
-    for tier in tiers:
-        if tier["service_tier"] != service_tier:
-            continue
-        if "input_tokens_lte" in tier and in_tok > tier["input_tokens_lte"]:
-            continue
-        if "input_tokens_gt" in tier and in_tok <= tier["input_tokens_gt"]:
-            continue
-        return tier
-    return {}
-
-
-def calc_cost(
-    model: str,
-    in_tok: int,
-    out_tok: int,
-    service_tier: str = "standard",
-) -> float:
-    rates = _get_pricing_tier(model, in_tok, service_tier)
+def calc_cost(model: str, in_tok: int, out_tok: int) -> float:
+    rates = get_model_metadata(model).get("pricing", {})
     if rates:
         return (in_tok * rates["input"] + out_tok * rates["output"]) / 1_000_000
     ic, oc = COSTS.get(bare_model(model), (0.0, 0.0))
