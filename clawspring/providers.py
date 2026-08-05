@@ -9,6 +9,7 @@ Supported providers:
   qwen       — Alibaba DashScope (qwen-max, qwen-plus, ...)
   zhipu      — Zhipu GLM (glm-4, glm-4-plus, ...)
   deepseek   — DeepSeek (deepseek-chat, deepseek-reasoner, ...)
+  minimax    — MiniMax (MiniMax-M3, MiniMax-M2.7)
   ollama     — Local Ollama (llama3.3, qwen2.5-coder, ...)
   lmstudio   — Local LM Studio (any loaded model)
   custom     — Any OpenAI-compatible endpoint
@@ -99,6 +100,30 @@ PROVIDERS: dict[str, dict] = {
             "deepseek-chat", "deepseek-coder", "deepseek-reasoner",
         ],
     },
+    "minimax": {
+        "type":       "openai",
+        "api_key_env": "MINIMAX_API_KEY",
+        "base_url":   "https://api.minimax.io/v1",
+        "anthropic_base_url": "https://api.minimax.io/anthropic",
+        "context_limit": 1000000,
+        "models": [
+            "MiniMax-M3", "MiniMax-M2.7",
+        ],
+        "regional_endpoints": [
+            {
+                "region": "global_en",
+                "openai_base_url": "https://api.minimax.io/v1",
+                "anthropic_base_url": "https://api.minimax.io/anthropic",
+                "docs_root": "https://platform.minimax.io/docs",
+            },
+            {
+                "region": "cn_zh",
+                "openai_base_url": "https://api.minimaxi.com/v1",
+                "anthropic_base_url": "https://api.minimaxi.com/anthropic",
+                "docs_root": "https://platform.minimaxi.com/docs",
+            },
+        ],
+    },
     "ollama": {
         "type":       "ollama",
         "api_key_env": None,
@@ -127,7 +152,35 @@ PROVIDERS: dict[str, dict] = {
     },
 }
 
-# Cost per million tokens (approximate, fallback to 0 for unknown)
+# Per-model metadata for models whose capabilities or pricing do not fit the
+# provider-level defaults. Prices are in USD per million tokens.
+MODEL_METADATA = {
+    "MiniMax-M3": {
+        "context_limit": 1000000,
+        "input_modalities": ["text", "image", "video"],
+        "thinking": ["adaptive", "disabled"],
+        "pricing": {
+            "input": 0.6,
+            "output": 2.4,
+            "cache_read": 0.12,
+            "cache_write": None,
+        },
+    },
+    "MiniMax-M2.7": {
+        "context_limit": 204800,
+        "input_modalities": ["text"],
+        "thinking": ["always_on"],
+        "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.06,
+            "cache_write": 0.375,
+        },
+    },
+}
+
+# Cost per million tokens for models with simple pricing (approximate,
+# fallback to 0 for unknown models).
 COSTS = {
     "claude-opus-4-6":          (15.0, 75.0),
     "claude-sonnet-4-6":        (3.0,  15.0),
@@ -161,6 +214,7 @@ _PREFIXES = [
     ("qwq-",          "qwen"),
     ("glm-",          "zhipu"),
     ("deepseek-",     "deepseek"),
+    ("minimax-",      "minimax"),
     ("llama",         "ollama"),
     ("mistral",       "ollama"),
     ("phi",           "ollama"),
@@ -184,6 +238,21 @@ def bare_model(model: str) -> str:
     return model.split("/", 1)[1] if "/" in model else model
 
 
+def get_model_metadata(model: str) -> dict:
+    """Return model-specific metadata, independent of adapter prefix."""
+    return MODEL_METADATA.get(bare_model(model), {})
+
+
+def get_context_limit(model: str) -> int:
+    """Return the model context limit, falling back to its provider default."""
+    metadata = get_model_metadata(model)
+    if metadata.get("context_limit"):
+        return metadata["context_limit"]
+    provider_name = detect_provider(model)
+    provider = PROVIDERS.get(provider_name, {})
+    return provider.get("context_limit", 128000)
+
+
 def get_api_key(provider_name: str, config: dict) -> str:
     prov = PROVIDERS.get(provider_name, {})
     # 1. Check config dict (e.g. config["kimi_api_key"])
@@ -200,6 +269,9 @@ def get_api_key(provider_name: str, config: dict) -> str:
 
 
 def calc_cost(model: str, in_tok: int, out_tok: int) -> float:
+    rates = get_model_metadata(model).get("pricing", {})
+    if rates:
+        return (in_tok * rates["input"] + out_tok * rates["output"]) / 1_000_000
     ic, oc = COSTS.get(bare_model(model), (0.0, 0.0))
     return (in_tok * ic + out_tok * oc) / 1_000_000
 

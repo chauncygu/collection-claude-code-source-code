@@ -34,6 +34,7 @@ DEFAULTS = {
     # "qwen_api_key":      "..."
     # "zhipu_api_key":     "..."
     # "deepseek_api_key":  "..."
+    # "minimax_api_key":   "..."
 }
 
 
