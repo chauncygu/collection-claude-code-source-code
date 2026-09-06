@@ -22,17 +22,21 @@ class ToolExecution:
 
 @lru_cache(maxsize=1)
 def load_tool_snapshot() -> tuple[PortingModule, ...]:
-    raw_entries = json.loads(SNAPSHOT_PATH.read_text())
-    return tuple(
-        PortingModule(
-            name=entry['name'],
-            responsibility=entry['responsibility'],
-            source_hint=entry['source_hint'],
-            status='mirrored',
+    if not SNAPSHOT_PATH.exists():
+        return ()
+    try:
+        raw_entries = json.loads(SNAPSHOT_PATH.read_text(encoding='utf-8'))
+        return tuple(
+            PortingModule(
+                name=entry['name'],
+                responsibility=entry['responsibility'],
+                source_hint=entry['source_hint'],
+                status='mirrored',
+            )
+            for entry in raw_entries
         )
-        for entry in raw_entries
-    )
-
+    except (json.JSONDecodeError, KeyError):
+        return ()
 
 PORTED_TOOLS = load_tool_snapshot()
 
